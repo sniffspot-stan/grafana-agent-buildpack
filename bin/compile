@@ -3,6 +3,18 @@
 BUILD_DIR=$1
 CACHE_DIR=$2
 
+mkdir -p $BUILD_DIR/bin
+
+if [[ -f $CACHE_DIR/agent-linux-amd64 && cmp -s $BUILD_DIR/bin/agent $CACHE_DIR/agent-linux-amd64 ]]; then
+  echo "Reusing cached agent binary."
+  cp -f "$CACHE_DIR/agent" "$BUILD_DIR/bin/agent"
+else
+  echo "Downloading agent binary."
+  curl -o "$CACHE_DIR/agent-linux-amd64.zip" -L "https://github.com/grafana/agent/releases/download/v0.15.0/agent-linux-amd64.zip"
+  unzip agent-linux-amd64.zip -d $CACHE_DIR
+  cp -f "$CACHE_DIR/agent-linux-amd64" "$BUILD_DIR/bin/agent"
+fi
+
 if [[ -f $CACHE_DIR/agent.yml && cmp -s $BUILD_DIR/config.yml $CACHE_DIR/agent.yml ]]; then
   echo "Reusing cached config.yml."
   cp -f "$CACHE_DIR/agent.yml" "$BUILD_DIR/agent.yml"
