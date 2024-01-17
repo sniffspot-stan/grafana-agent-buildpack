@@ -5,26 +5,16 @@ CACHE_DIR=$2
 
 mkdir -p $BUILD_DIR/bin
 
-if [ -f $CACHE_DIR/grafana-agent-linux-amd64 ] && cmp -s $BUILD_DIR/bin/grafana-agent $CACHE_DIR/grafana-agent-linux-amd64; then
-  echo "Reusing cached agent binary."
-  cp -f "$CACHE_DIR/grafana-agent-linux-amd64" "$BUILD_DIR/bin/grafana-agent"
-else
-  echo "Downloading agent binary."
-  curl -o "$CACHE_DIR/agent.zip" -L "https://github.com/grafana/agent/releases/download/v0.39.0/grafana-agent-linux-amd64.zip"
-  unzip "$CACHE_DIR/agent.zip" -d $CACHE_DIR
-  cp -f "$CACHE_DIR/grafana-agent-linux-amd64" "$BUILD_DIR/bin/grafana-agent"
+echo "Downloading agent binary."
+curl -o "$CACHE_DIR/agent.zip" -L "https://github.com/grafana/agent/releases/download/v0.39.0/grafana-agent-linux-amd64.zip"
+unzip "$CACHE_DIR/agent.zip" -d $CACHE_DIR
+mv "$CACHE_DIR/grafana-agent-linux-amd64" "$BUILD_DIR/bin/grafana-agent"
+rm "$CACHE_DIR/agent.zip"
+
+if ! [ -x "$(command -v envsubst)" ]; then
+  echo "Installing dependencies."
+  apt install -y gettext
 fi
 
-if [ -f $CACHE_DIR/grafana-agent.env.cfg ] && cmp -s $BUILD_DIR/grafana-agent.cfg $CACHE_DIR/grafana-agent.env.cfg; then
-  echo "Reusing cached grafana-agent.cfg."
-  cp -f "$CACHE_DIR/grafana-agent.env.cfg" "$BUILD_DIR/grafana-agent.env.cfg"
-else
-  if ! [ -x "$(command -v envsubst)" ]; then
-    echo "Installing dependencies."
-    apt install -y gettext
-  fi
-
-  echo "Substituting envrionment variables."
-  envsubst < $BUILD_DIR/grafana-agent.cfg > $BUILD_DIR/grafana-agent.env.cfg
-  cp -f "$BUILD_DIR/grafana-agent.env.cfg" "$CACHE_DIR/grafana-agent.env.cfg"
-fi
+echo "Substituting envrionment variables."
+envsubst < $BUILD_DIR/grafana-agent.cfg > $BUILD_DIR/grafana-agent.env.cfg

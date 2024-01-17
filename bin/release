@@ -6,4 +6,5 @@ cat << EOF
 ---
 default_process_types:
   web: bin/grafana-agent -config.file grafana-agent.env.cfg
+  worker: bin/grafana-agent -config.file grafana-agent.env.cfg
 EOF
