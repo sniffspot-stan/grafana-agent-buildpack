@@ -3,12 +3,12 @@
 This is a buildpack for
 [Grafana Agent](https://github.com/grafana/agent) deployments.
 
-The official agent buildpack is over 3 years old. This is to update the buildpack to use the latest version, so it is possible to run the agent in flow mode (by adding config variable AGENT_MODE=flow)
+The official agent buildpack is over 3 years old. This is to update the buildpack to use the latest version,  and run the agent in flow mode (by adding config variable AGENT_MODE=flow)
 
 ## Usage
 
 ### Config
-Your config file should be placed into the root as `grafana-agent.cfg`. Note that it is not `.river` or `.yml` as this buildpack should support both flows. If syntax highlighting is needed, make `grafana-agent.cfg` a symblink to the specific file with extension desired.
+Your config file should be placed into the root as `grafana-agent.cfg`. Note that it is not `.river` or `.yml` as this buildpack should support both flows. If syntax highlighting is needed, make `grafana-agent.cfg` a symblink to the specific file with extension desired (Although currently it can only be run in flow mode)
 
 The buildpack will substitute any environment variables. Example:
 
