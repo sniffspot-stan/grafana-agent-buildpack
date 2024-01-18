@@ -5,19 +5,15 @@ CACHE_DIR=$2
 
 ENV_DIR=$3
 
-export_env_dir() {
-  acceptlist_regex=${2:-'^(PROM_USERNAME|PROM_PASS)$'}
-  denylist_regex=${3:-'^(PATH|GIT_DIR|CPATH|CPPATH|LD_PRELOAD|LIBRARY_PATH)$'}
-  if [ -d "$ENV_DIR" ]; then
-    for e in $(ls $ENV_DIR); do
-      echo "$e" | grep -E "$acceptlist_regex" | grep -qvE "$denylist_regex" &&
-      export "$e=$(cat $ENV_DIR/$e)"
-      :
-    done
-  fi
-}
-
-export_env_dir();
+acceptlist_regex=${2:-'^(PROM_USERNAME|PROM_PASS)$'}
+denylist_regex=${3:-'^(PATH|GIT_DIR|CPATH|CPPATH|LD_PRELOAD|LIBRARY_PATH)$'}
+if [ -d "$ENV_DIR" ]; then
+  for e in $(ls $ENV_DIR); do
+    echo "$e" | grep -E "$acceptlist_regex" | grep -qvE "$denylist_regex" &&
+    export "$e=$(cat $ENV_DIR/$e)"
+    :
+  done
+fi
 
 mkdir -p $BUILD_DIR/bin
 
