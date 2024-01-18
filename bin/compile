@@ -6,9 +6,9 @@ CACHE_DIR=$2
 ENV_DIR=$3
 
 acceptlist_regex=${2:-'^(PROM_USERNAME|PROM_PASS)$'}
-denylist_regex=${3:-'^(PATH|GIT_DIR|CPATH|CPPATH|LD_PRELOAD|LIBRARY_PATH)$'}
 if [ -d "$ENV_DIR" ]; then
   for e in $(ls $ENV_DIR); do
+    echo "env var: $ENV_DIR/$e"
     echo "$e" | grep -E "$acceptlist_regex" | grep -qvE "$denylist_regex" &&
     export "$e=$(cat $ENV_DIR/$e)"
     :
