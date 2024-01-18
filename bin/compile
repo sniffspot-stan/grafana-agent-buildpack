@@ -5,15 +5,8 @@ CACHE_DIR=$2
 
 ENV_DIR=$3
 
-acceptlist_regex=${2:-'^(PROM_USERNAME|PROM_PASS)$'}
-if [ -d "$ENV_DIR" ]; then
-  for e in $(ls $ENV_DIR); do
-    echo "env var: $ENV_DIR/$e"
-    echo "$e" | grep -E "$acceptlist_regex" | grep -qvE "$denylist_regex" &&
-    export "$e=$(cat $ENV_DIR/$e)"
-    :
-  done
-fi
+export PROM_USERNAME=$(cat "$ENV_DIR/PROM_USERNAME")
+export PROM_PASS=$(cat "$ENV_DIR/PROM_PASS")
 
 mkdir -p $BUILD_DIR/bin
 
