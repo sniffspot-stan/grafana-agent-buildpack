@@ -5,6 +5,5 @@ BUILD_DIR=$1
 cat << EOF
 ---
 default_process_types:
-  web: AGENT_MODE=flow nohup bin/grafana-agent run grafana-agent.env.cfg > ga.log 2>&1 &
-  worker: AGENT_MODE=flow nohup bin/grafana-agent run grafana-agent.env.cfg > ga.log 2>&1 &
+  agent: AGENT_MODE=flow nohup bin/grafana-agent run grafana-agent.env.cfg > ga.log 2>&1 &
 EOF
